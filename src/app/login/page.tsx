@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoPage } from "@/components/info-page";
-import { signIn } from "@/app/actions";
+import { signIn, signInWithGoogle } from "@/app/actions";
 
 export const metadata: Metadata = {
   title: "Sign in",
@@ -16,6 +16,8 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const { error, message } = await searchParams;
   const errorMessage = error === "not-configured"
     ? "Account services are not configured yet. Add your Supabase project settings to enable sign in."
+    : error === "google"
+    ? "Google sign-in is unavailable. Please try again or sign in with your email."
     : error
       ? "We couldn't sign you in. Check your details and try again."
       : null;
@@ -32,6 +34,9 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           <input autoComplete="current-password" className="search-input min-h-11 rounded-lg border border-[var(--line)] px-3" id="password" name="password" required type="password" />
         </label>
         <button className="min-h-11 rounded-lg bg-[var(--green)] px-4 py-2.5 text-sm font-bold text-white hover:bg-[var(--green-dark)]" type="submit">Sign in</button>
+      </form>
+      <form action={signInWithGoogle}>
+        <button className="min-h-11 w-full rounded-lg border border-[var(--line)] bg-white px-4 py-2.5 text-sm font-bold text-[#26332a] hover:bg-[#f7faf7]" type="submit">Continue with Google</button>
       </form>
       <p className="text-sm">New to ETS-Directory? <Link className="font-bold text-[var(--green)]" href="/register">Create an account</Link></p>
     </InfoPage>

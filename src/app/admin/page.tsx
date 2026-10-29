@@ -19,9 +19,9 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminPage({ searchParams }: AdminPageProps) {
   const supabase = await createServerSupabaseClient();
-  if (!supabase) redirect("/login?error=not-configured");
+  if (!supabase) redirect("/admin/login?error=not-configured");
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/admin/login");
 
   const [{ data: profile, error: profileError }, params] = await Promise.all([
     supabase.from("profiles").select("role").eq("id", user.id).single(),
@@ -29,9 +29,9 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   ]);
   if (profileError) {
     console.error("Moderation permission could not be checked:", profileError.message);
-    redirect("/dashboard");
+    redirect("/admin/login?error=permissions");
   }
-  if (!profile || !["moderator", "admin"].includes(profile.role)) redirect("/dashboard");
+  if (!profile || !["moderator", "admin"].includes(profile.role)) redirect("/admin/login?error=forbidden");
 
   const activityWindowStart = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
   const [businessResult, reviewResult, claimResult, reportResult, verificationResult, dataRequestResult, activityResult] = await Promise.all([

@@ -31,7 +31,7 @@ Run `npm run typecheck`, `npm run lint`, `npm test`, and `npm run build` before 
 2. Install the Supabase CLI, authenticate, and link the project.
 3. Apply migrations with `supabase db push`.
 4. Load categories and initial ZAR plan prices with `supabase/seed.sql` in a disposable development project or through the SQL editor.
-5. In Supabase Auth, enable email confirmation and add `http://localhost:3000/auth/callback` (plus the production callback URL) to the allowed redirect URLs.
+5. In Supabase Auth, enable email confirmation and add `http://localhost:3000/auth/callback` (plus the production callback URL) to the allowed redirect URLs. Enable the Google provider there to offer Google sign-in.
 6. Grant the `moderator` or `admin` profile role only through a trusted administrative process. Never expose role changes through signup or user profile forms.
 
 Migrations:

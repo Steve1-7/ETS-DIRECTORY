@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoPage } from "@/components/info-page";
-import { signUp } from "@/app/actions";
+import { signInWithGoogle, signUp } from "@/app/actions";
 
 export const metadata: Metadata = {
   title: "Create an account",
@@ -32,6 +32,9 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
           <span className="text-xs font-normal text-[var(--muted)]">Use at least 8 characters.</span>
         </label>
         <button className="min-h-11 rounded-lg bg-[var(--green)] px-4 py-2.5 text-sm font-bold text-white hover:bg-[var(--green-dark)]" type="submit">Create account</button>
+      </form>
+      <form action={signInWithGoogle}>
+        <button className="min-h-11 w-full rounded-lg border border-[var(--line)] bg-white px-4 py-2.5 text-sm font-bold text-[#26332a] hover:bg-[#f7faf7]" type="submit">Continue with Google</button>
       </form>
       <p className="text-sm">Already registered? <Link className="font-bold text-[var(--green)]" href="/login">Sign in</Link></p>
     </InfoPage>

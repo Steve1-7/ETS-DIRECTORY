@@ -79,6 +79,83 @@ export async function signIn(formData: FormData) {
   redirect("/dashboard");
 }
 
+export async function signInAdmin(formData: FormData) {
+  const parsed = z.object({
+    email: emailSchema,
+    password: passwordSchema,
+  }).safeParse({
+    email: getText(formData, "email"),
+    password: getText(formData, "password"),
+  });
+
+  if (!parsed.success) {
+    redirect("/admin/login?error=invalid");
+  }
+
+  const supabase = await createServerSupabaseClient();
+  if (!supabase) {
+    redirect("/admin/login?error=not-configured");
+  }
+
+  const { data, error } = await supabase.auth.signInWithPassword(parsed.data);
+  if (error || !data.user) {
+    if (error) console.error("Admin sign-in failed:", error.message);
+    redirect("/admin/login?error=sign-in");
+  }
+
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", data.user.id)
+    .single();
+
+  if (profileError) {
+    console.error("Admin permission could not be checked:", profileError.message);
+    const { error: signOutError } = await supabase.auth.signOut();
+    if (signOutError) console.error("Unauthorized admin sign-in could not be cleared:", signOutError.message);
+    redirect("/admin/login?error=permissions");
+  }
+
+  if (!profile || !["moderator", "admin"].includes(profile.role)) {
+    const { error: signOutError } = await supabase.auth.signOut();
+    if (signOutError) console.error("Unauthorized admin sign-in could not be cleared:", signOutError.message);
+    redirect("/admin/login?error=forbidden");
+  }
+
+  redirect("/admin");
+}
+
+async function startGoogleSignIn(destination: "/dashboard" | "/admin") {
+  const loginPath = destination === "/admin" ? "/admin/login" : "/login";
+  const supabase = await createServerSupabaseClient();
+  if (!supabase) {
+    redirect(`${loginPath}?error=not-configured`);
+  }
+
+  const callbackUrl = new URL("/auth/callback", process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000");
+  callbackUrl.searchParams.set("next", destination);
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: callbackUrl.toString() },
+  });
+
+  if (error || !data.url) {
+    if (error) console.error("Google sign-in could not be started:", error.message);
+    else console.error("Google sign-in did not return an authorization URL.");
+    redirect(`${loginPath}?error=google`);
+  }
+
+  redirect(data.url);
+}
+
+export async function signInWithGoogle() {
+  await startGoogleSignIn("/dashboard");
+}
+
+export async function signInAdminWithGoogle() {
+  await startGoogleSignIn("/admin");
+}
+
 export async function signUp(formData: FormData) {
   const parsed = z.object({
     fullName: z.string().trim().min(2).max(120),

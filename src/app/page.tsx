@@ -99,24 +99,47 @@ export default function HomePage() {
         </section>
 
         <section className="container py-16 md:py-20">
-          <div className="flex flex-wrap items-end justify-between gap-5">
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-5">
             <div>
-              <p className="eyebrow mb-3">Explore by category</p>
-              <h2 className="section-title">Find the right people for the job</h2>
-              <p className="section-copy">Start with a category and discover local businesses near you.</p>
+              <p className="eyebrow mb-3">Gallery spotlight</p>
+              <h2 className="section-title">A directory that feels like a neighbourhood mood board.</h2>
+              <p className="section-copy">From fresh home upgrades to late-night bites and business wins, discover the kind of local energy that makes a place unforgettable.</p>
             </div>
             <Link className="inline-flex items-center gap-2 pb-1 text-sm font-bold text-[var(--green)] hover:text-[var(--green-dark)]" href="/categories">
               All categories <ArrowRight aria-hidden="true" size={16} />
             </Link>
           </div>
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-            {categories.map(({ name, slug, Icon }) => (
-              <Link className="category-card group rounded-2xl p-5" href={`/categories/${slug}`} key={slug}>
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#edf6ef] text-[var(--green)] transition group-hover:bg-[var(--green)] group-hover:text-white">
-                  <Icon aria-hidden="true" size={21} strokeWidth={1.8} />
-                </span>
-                <span className="mt-4 block text-sm font-bold leading-snug">{name}</span>
-                <span className="mt-2 block text-xs text-[#879189]">Explore local</span>
+
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {categories.map(({ name, slug, Icon, description, tag, gradient, accent }, index) => (
+              <Link className={`group relative overflow-hidden rounded-[30px] border border-[#eaf0ea] bg-white shadow-[0_18px_45px_rgba(16,41,29,0.08)] transition hover:-translate-y-1 hover:shadow-[0_28px_60px_rgba(16,41,29,0.12)] ${index === 0 ? "xl:col-span-2" : ""}`} href={`/categories/${slug}`} key={slug}>
+                <div className={`relative h-[250px] bg-gradient-to-br ${gradient} p-5 text-slate-900`}>
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.65),transparent_26%),linear-gradient(135deg,rgba(255,255,255,0.12),transparent_58%)]" />
+                  <div className="relative flex h-full flex-col justify-between">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="inline-flex items-center rounded-full border border-white/60 bg-white/25 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-800 backdrop-blur-sm">
+                        {tag}
+                      </span>
+                      <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/60 bg-white/20 text-slate-900 backdrop-blur-sm">
+                        <Icon aria-hidden="true" size={22} strokeWidth={1.8} />
+                      </span>
+                    </div>
+
+                    <div>
+                      <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-700/80">Featured</p>
+                      <h3 className="mt-2 text-3xl font-black tracking-[-0.06em] text-slate-900">{name}</h3>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between gap-4 border-t border-[#edf0ed] bg-white p-4">
+                  <div className="min-w-0">
+                    <p className="text-sm leading-6 text-[#67736d]">{description}</p>
+                  </div>
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#e5eae6] bg-[#f7faf7] text-[color:var(--green)]" style={{ color: accent }}>
+                    <ArrowRight aria-hidden="true" size={16} />
+                  </span>
+                </div>
               </Link>
             ))}
           </div>
