@@ -42,7 +42,7 @@ Migrations:
 - `20261023000000_saved_searches_and_billing.sql`: saved searches, owner analytics, and guarded Paystack checkout/payment RPCs.
 - `20261024000000_data_subject_requests.sql`: account-scoped access, correction, deletion, and listing-removal requests with a staff queue.
 - `20261025000000_site_activity_analytics.sql`: opt-in site-wide activity analytics, staff reporting, and 30-day event cleanup through `pg_cron`.
-- `20261029000000_grant_profile_select.sql`: allows authenticated users to read profiles permitted by row-level security.
+- `20261029000000_grant_profile_select.sql`: grants authenticated users the table privileges needed for staff role checks and moderation queues; row-level security still controls accessible rows.
 
 Apply all migrations before deploying the app code. Do not run destructive development seed/reset commands against production.
 
