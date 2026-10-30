@@ -43,6 +43,8 @@ Migrations:
 - `20261024000000_data_subject_requests.sql`: account-scoped access, correction, deletion, and listing-removal requests with a staff queue.
 - `20261025000000_site_activity_analytics.sql`: opt-in site-wide activity analytics, staff reporting, and 30-day event cleanup through `pg_cron`.
 - `20261029000000_grant_profile_select.sql`: grants authenticated users the table privileges needed for staff role checks and moderation queues; row-level security still controls accessible rows.
+- `20261029193400_grant_listing_events_select.sql`: grants authenticated users the table privilege required by the staff analytics RPC; row-level security still limits event rows to listing owners and staff.
+- `20261030162300_grant_listing_submission.sql`: grants category reads and listing-submission inserts to the appropriate roles; row-level security still limits which rows users can access or create.
 
 Apply all migrations before deploying the app code. Do not run destructive development seed/reset commands against production.
 
